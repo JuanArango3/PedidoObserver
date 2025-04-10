@@ -3,8 +3,10 @@ package org.example.pedidoobserver.pedido.subscribers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.pedidoobserver.RabbitMQConfig;
 import org.example.pedidoobserver.pedido.PedidoDTO;
 import org.example.pedidoobserver.pedido.PedidoSubscriber;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -18,6 +20,7 @@ public class SaveInFile implements PedidoSubscriber {
     private final File file = new File("pedidos.txt");
 
     @Override
+    @RabbitListener(queues = "#{fileQueue.name}")
     public void onPedidoReceived(PedidoDTO pedido) {
         log.info("Guardando en el archivo el pedido: {}", pedido.nombre());
         try (FileWriter writer = new FileWriter(file, true)) {

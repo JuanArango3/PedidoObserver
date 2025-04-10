@@ -6,6 +6,7 @@ import org.example.pedidoobserver.pedido.Pedido;
 import org.example.pedidoobserver.pedido.PedidoDTO;
 import org.example.pedidoobserver.pedido.PedidoRepository;
 import org.example.pedidoobserver.pedido.PedidoSubscriber;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,6 +18,7 @@ public class SaveInDB implements PedidoSubscriber {
 
 
     @Override
+    @RabbitListener(queues = "#{dbQueue.name}")
     public void onPedidoReceived(PedidoDTO pedido) {
         log.info("Guardando en la base de datos el pedido: {}", pedido.nombre());
         Pedido pedidoEntity = new Pedido();
