@@ -18,64 +18,117 @@ public class GUI {
     @PostConstruct
     public void init() {
         new Thread(() -> {
-            boolean agregarOtroPedido;
 
-            do {
-                // Nombre
-                /*String nombre = JOptionPane.showInputDialog(null, "Ingrese el nombre del producto:",
-                        "Pedido", JOptionPane.QUESTION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Bienvenid@ al sistema de inscripción de la U C&J. ¡Empecemos!",
+                    "Bienvenida", JOptionPane.INFORMATION_MESSAGE);
 
-                //  Cantidad
-                int cantidad = 0;
+            // Nombre
+            String nombre = JOptionPane.showInputDialog(null, "Ingresa el nombre completo:",
+                    "Inscripcion", JOptionPane.QUESTION_MESSAGE);
+
+            //  Tipo de identificacion
+            String[] tiposIdentificacion = {
+                    "Cédula de ciudadanía",
+                    "Tarjeta de identidad",
+                    "Cédula de extranjería"
+            };
+
+            String tipoSeleccionado = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Selecciona tu tipo de identificación:",
+                    "Tipo de Identificación",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    tiposIdentificacion,
+                    tiposIdentificacion[0]
+            );
+
+            if (tipoSeleccionado != null) {
+                System.out.println("Nombre ingresado: " + nombre);
+                System.out.println("Tipo de identificación seleccionado: " + tipoSeleccionado);
+            } else {
+                System.out.println("No seleccionaste tipo de identificación.");
+            }
+
+                //  Identificacion
+                int identificacion = 0;
                 while (true) {
                     try {
-                        String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad:",
+                        String IdStr = JOptionPane.showInputDialog(null, "Ingrese la identificacion:",
                                 "Pedido", JOptionPane.QUESTION_MESSAGE);
-                        cantidad = Integer.parseInt(cantidadStr);
+                        identificacion = Integer.parseInt(IdStr);
                         break;
                     } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Por favor, ingrese un número entero válido.",
+                        JOptionPane.showMessageDialog(null, "Por favor, ingrese un número de identificacion correcto sin espacios ni puntos",
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
 
-                //  Precio unitario
-                float precioUnitario = 0.0f;
-                while (true) {
-                    try {
-                        String precioStr = JOptionPane.showInputDialog(null, "Ingrese el precio unitario:",
-                                "Pedido", JOptionPane.QUESTION_MESSAGE);
-                        precioUnitario = Float.parseFloat(precioStr);
-                        break;
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido para el precio.",
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }*/
+            // Es Colombiano (Pregunta sí/no)
+            int respuesta = JOptionPane.showConfirmDialog(null, "¿Eres colombiano?",
+                    "Confirmación", JOptionPane.YES_NO_OPTION);
+            boolean esColombiano = (respuesta == JOptionPane.YES_OPTION);
 
-                // Crear el PedidoDTO y enviarlo al servicio
-                RegistroDTO registroDTO = RegistroDTO.builder()
-                        .nombre("nombre")
-                        .esColombiano(true)
-                        .email("email")
-                        .carrera("carrera")
-                        .cedula("CC 123871259")
-                        .build();
-                registroService.createRegistro(registroDTO);
+            // Carrera
+            String[] carreras = {
+                    "Medicina veterinaria",
+                    "Ingenieria informatica",
+                    "Ingenieria ambiental",
+                    "Derecho",
+                    "Administracion"
+            };
 
-                JOptionPane.showMessageDialog(null, "Pedido creado exitosamente!",
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            String carreraSeleccionada = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Selecciona tu carrera:",
+                    "Carrera",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    carreras,
+                    carreras[0]
+            );
 
-                // Agregar otro pedido
-                int respuesta = JOptionPane.showConfirmDialog(null,
-                        "¿Desea agregar otro pedido?", "Confirmar",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (carreraSeleccionada == null) {
+                JOptionPane.showMessageDialog(null, "No seleccionaste una carrera.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-                agregarOtroPedido = (respuesta == JOptionPane.YES_OPTION);
+            // Correo electrónico: Validar que termine en @gmail.com o @hotmail.com
+            String email;
+            while (true) {
+                email = JOptionPane.showInputDialog(null, "Ingresa tu correo electrónico:",
+                        "Correo electrónico", JOptionPane.QUESTION_MESSAGE);
 
-            } while (agregarOtroPedido);
+                if (email != null && (email.endsWith("@gmail.com") || email.endsWith("@hotmail.com"))) {
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(null, "El correo debe terminar en @gmail.com o @hotmail.com",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
 
-            JOptionPane.showMessageDialog(null, "Gracias por usar el sistema de pedidos.",
+
+            // Crear el RegistroDTO
+            RegistroDTO registroDTO = RegistroDTO.builder()
+                    .nombre(nombre)
+                    .tipoIdentificacion(tipoSeleccionado)
+                    .cedula(identificacion)
+                    .esColombiano(esColombiano)
+                    .carrera(carreraSeleccionada)
+                    .email(email)
+                    .build();
+
+            // Llamar al servicio para procesar el registro
+            registroService.createRegistro(registroDTO);
+
+            // Mensaje de éxito
+            JOptionPane.showMessageDialog(null, "Pre-registro creado exitosamente!",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+
+
+            JOptionPane.showMessageDialog(null, "Gracias por usar el sistema de inscripción de la U C&J.",
                     "Finalizado", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }).start();

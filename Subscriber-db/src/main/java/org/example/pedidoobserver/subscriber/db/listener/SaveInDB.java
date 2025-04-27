@@ -21,8 +21,10 @@ public class SaveInDB {
         log.info("Guardando en la base de datos el pedido: {}", pedido.nombre());
         Registro registroEntity = new Registro();
         registroEntity.setNombre(pedido.nombre());
-        registroEntity.setCedula(pedido.cedula());
+        registroEntity.setCedula(String.valueOf(pedido.cedula()));
         registroEntity.setEsColombiano(pedido.esColombiano());
+        registroEntity.setNombre(pedido.tipoIdentificacion());
+
         registroEntity.setCarrera(pedido.carrera());
         registroEntity.setEmail(pedido.email());
         registroRepository.save(registroEntity);

@@ -7,11 +7,12 @@ import java.io.Serializable;
 @Builder
 public record RegistroDTO(
         String nombre,
-        
-        // CC 9124891274 o TI 124871284
-        String cedula,
+        String tipoIdentificacion,
+
+        int cedula,
         boolean esColombiano,
         String carrera,
+
         String email
 
 ) implements Serializable {
