@@ -25,7 +25,7 @@
         <module>PedidoPublisher</module>
         <module>Common</module>
         <module>Subscriber-db</module>
-        <module>Subscriber-file</module>
+        <module>Subscriber-email</module>
     </modules>
     <scm>
         <connection/>
